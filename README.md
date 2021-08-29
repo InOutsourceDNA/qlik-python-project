@@ -27,14 +27,14 @@
 ></span>
 
 1. Open a command prompt
-2. Make a new project folder called QlikSenseAAI, where all of our projects will live that leverage the QlikSenseAAI virtual environment that we’ve created. Let’s place it under ‘C:\Users\{Your Username}’. If you have already created this folder in another guide, simply skip this step.
+2. Make a new project folder called QlikSenseAAI, where all of our projects will live that leverage the QlikSenseAAI virtual environment that we’ve created. Let’s place it under ‘C:\python’.
 3. We now want to leverage our virtual environment. If you are not already in your environment, enter it by executing:
 
 ```shell
 $ workon QlikSenseAAI
 ```
 
-4. Now, ensuring you are in the ‘QlikSenseAAI’ folder that you created (if you have followed another guide, it might redirect you to a prior working directory if you've set a default, execute the following commands to create and navigate into your project’s folder structure:
+4. Now, ensuring you are in the ‘QlikSenseAAI’ folder that you created. Execute the following commands to create and navigate into your project’s folder structure:
 ```
 $ cd QlikSenseAAI
 $ mkdir DefendantMatch
@@ -62,7 +62,7 @@ the working directory with ‘setprojectdir .’
 ```shell
 $ workon QlikSenseAAI
 ```
-2. Execute the following commands. If you have followed a previous guide, you have more than likely already installed grpcio).
+2. Execute the following commands. 
 
 
 
@@ -82,6 +82,9 @@ $ pip install hyper
     - **Port** is the target port in which the service is running. This module is setup to run on 50055, however that can be easily modified by searching for ‘-port’ in the ‘\_\_main\_\_.py’ file and changing the ‘default’ parameter to an available port.
 3. Click ‘Apply’, and you’ve now created a new analytics connection.
 
+## COPY THE PACKAGE CONTENTS AND IMPORT EXAMPLES
+
+1. To start the defendant match service and app, clone the repository to the ‘..\python\DefendantMatch’ location. 
 
 ## PREPARE AND START SERVICES
 
