@@ -64,13 +64,11 @@ $ workon QlikSenseAAI
 ```
 2. Execute the following commands. If you have followed a previous guide, you have more than likely already installed grpcio).
 
-*Note that we cannot use the googletrans library in the interim as Google has changed the way they send tokens, which has broken the repo. Updated install below* _10.29.18_.
+
 
 ```shell
 $ pip install grpcio
 $ python -m pip install grpcio-tools
-$ git clone https://github.com/BoseCorp/py-googletrans.git
-$ cd ./py-googletrans
 $ python setup.py install
 $ pip install hyper
 ```
@@ -81,216 +79,165 @@ $ pip install hyper
 2. Fill in the **Name**, **Host**, and **Port** parameters -- these are mandatory.
     - **Name** is the alias for the analytic connection. For the example qvf to work without modifications, name it 'PythonTranslate'
     - **Host** is the location of where the service is running. If you installed this locally, you can use 'localhost'
-    - **Port** is the target port in which the service is running. This module is setup to run on 50091, however that can be easily modified by searching for ‘-port’ in the ‘\_\_main\_\_.py’ file and changing the ‘default’ parameter to an available port.
+    - **Port** is the target port in which the service is running. This module is setup to run on 50055, however that can be easily modified by searching for ‘-port’ in the ‘\_\_main\_\_.py’ file and changing the ‘default’ parameter to an available port.
 3. Click ‘Apply’, and you’ve now created a new analytics connection.
-
-
-## COPY THE PACKAGE CONTENTS AND IMPORT EXAMPLES
-
-1. Now we want to setup our translation service and app. Let’s start by copying over the contents of the example
-    from this package to the ‘..\QlikSenseAAI\Translate\’ location. Alternatively you can simply clone the repository.
-2. After copying over the contents, go ahead and import the example qvf found [here](../assets/DPI%20-%20Python%20Translation.qvf?raw=true).
-3. Lastly, import the qsvariable extension zip file found [here](https://github.com/erikwett/qsVariable) using the QMC.
 
 
 ## PREPARE AND START SERVICES
 
-1. At this point the setup is complete, and we now need to start the translation extension service. To do so, navigate back to the command prompt. Please make sure that you are inside of the virtual environment.
+1. At this point the setup is complete, and we now need to start the python extension service. To do so, navigate back to the command prompt. Please make sure that you are inside of the virtual environment.
 2. Once at the command prompt and within your environment, execute (note two underscores on each side):
 ```shell
 $ python __main__.py
 ```
 3. We now need to restart the Qlik Sense engine service so that it can register the new AAI service. To do so,
     navigate to windows Services and restart the ‘Qlik Sense Engine Service’
-4. You should now see in the command prompt that the Qlik Sense Engine has registered the functions Translate
-    and TranslateScript from the extension service over port 50091, or whichever port you’ve chosen to leverage.
+4. You should now see in the command prompt that the Qlik Sense Engine has registered the defendant match
+    function from the extension service over port 50055, or whichever port you’ve chosen to leverage.
 
 
-## LEVERAGE PYTHON TRANSLATION ANALYSIS FROM WITHIN SENSE
+## LEVERAGE PYTHON DEFENDANT MATCH FROM WITHIN SENSE
 
-1. The *Translate()* function leverages the [Googletrans package](http://py-googletrans.readthedocs.io/en/latest/) and accepts three mandatory arguments:
-    - *Text (string)*: i.e. a sentence, paragraph, etc
-    - *Source (string)*: the language code of the source (see below)
-    - *Destination (string)*: the language code of the destination (see below)
+1. The *DefendantMatch()* function leverages our script and accepts two mandatory arguments:
+    - *DefendantName (string)*
+    - *AlertUniqueID (string)*
 2. Example function calls:
 	
-    *Translate text from English to Japense*:
-    ``` PythonTranslate.Translate(text,’en’,’ja’) ``` 
+    *match defendants to clients*:
+    ``` Python.DefendantMatch(DefendantTable{"DefendantName", "AlertUniqueID"}) ``` 
     
-    *Translate text from German to English*:
-    ``` PythonTranslate.Translate(text,’de’,’en’) ```
-3. There is another script function exposed called *TranslateScript()*. This function can only be used in the script and is leveraged via the [**LOAD ... EXTENSION ...**](https://help.qlik.com/en-US/sense/February2018/Subsystems/Hub/Content/Scripting/ScriptRegularStatements/Load.htm) mechanism which was added as of the February 2018 release of Qlik Sense. This function takes four fields:
-       
-       text, a numeric id, source language, destination language
 
-See the below example of how to utilize the *TranslateScript()* function in the load script.
-
-
-*Note that if you are using QlikView and cannot use the TranslateScript() function, you can still use the Translate() function in the script just like any other native function--just be aware that this will operate as a scalar function and will be called record-by-record vs a single time. This will have a large performance impact but will still work.
 
 ```
-Data:
-FIRST 10
+//LIB CONNECT TO 'LitAlerts_REST_ClientNameSearch (piper_jp41325)';
+//LIB CONNECT TO 'REST_ClientNameSearch (inoutsource_jpierantozzi)';
+
+ 
+
+
+[Client_Search_Results_Prime]:
+//LOAD * FROM 'lib://Attachments Folder (piper_as40298)/LitAlertsMatchResults.qvd'(qvd);
+LOAD * FROM 'lib://LitAlerts (inoutsource_jpierantozzi)/demo/LitAlertsMatchResults.qvd'(qvd);
+
+ 
+
+[TokensToIgnore]:
+ LOAD * Inline [TokenString
+ 'The'];
+
+ 
+
+ LOAD * Inline [TokenString
+ 'A Delaware Corporation'];
+
+ 
+
+[DoingBusinessAsMapping]:
+MAPPING LOAD * INLINE ['TokenToFind', 'TokenToReplace'
+'doing business as', ';'
+'d/b/a', ';'
+' dba ', ';'];
+
+ 
+
+[CNS_Alerts]:
+// Load * From 'lib://Attachments Folder (piper_as40298)/CNS Alerts.qvd'(qvd)
+// where IsNull([MatchRunDate]) OR Len(Trim(MatchRunDate)) = 0; 
 LOAD
-    business_id,
-    "date",
-    RecNo() AS review_id,
-    stars,
-    "text",
-    "type",
-    user_id,
-    cool,
-    useful,
-    funny,
-    'en' AS English,
-    'ja' AS Japanese,
-    'tr' AS Turkish,
-    'sv' AS Swedish,
-    'ru' AS Russian,
-    'fr' AS French,
-    'ar' AS Arabic
-FROM [lib://Builds (qlik_qservice)/TranslationData\yelp.csv]
-(txt, utf8, embedded labels, delimiter is ',', msq);
+    AlertUniqueID,
+    Source,
+    "fileName",
+    fileTimestamp,
+    AlertUploadDate,
+    Plaintiffs,
+    Defendants,
+    Summary,
+    CourtName,
+    "Filing Date",
+    CaseNumber,
+    Judge,
+    "Plaintiff Lawyer",
+    "Plaintiff Lawyer Firms",
+    "Defendant Lawyers",
+    "Defendant Lawyer Firms",
+    City,
+    State,
+    NOS,
+    "Download Link",
+    MatchRunDate,
+    PossibleDuplicate,
+    DuplicateAlertID,
+    ComplaintID,
+    BatchID,
+    CaseString,
+    NormCourtText,
+    NormCourtName,
+    DefendantCount,
+    PlaintiffCount,
+    StringSum,
+    PlaintiffLDString,
+    DefendantLDString
+FROM [lib://DB Shares folder (inoutsource_aspivey) (inoutsource_zbeauchemin)/NCFI/CNS Alerts.qvd]
+(qvd);
 
+ 
 
-// PYTHON
-Japanese:
-LOAD
-	Field1 AS review_id,
-	Field2 AS "Translated Text (Japanese)"
-EXTENSION PythonTranslate.TranslateScript(Data{text,"review_id",English,Japanese});
+//  trace('Starting Find CNS matches');
+Set defendantNum = 0;
+// let CNSrows = NoOfRows('CNS_Alerts');
+let ignoreTokensRows = NoOfRows('TokensToIgnore');
 
-Turkish:
-LOAD
-	Field1 AS review_id,
-	Field2 AS "Translated Text (Turkish)"
-EXTENSION PythonTranslate.TranslateScript(Data{text,"review_id",English,Turkish});
+ 
 
-DROP FIELDS English, Japanese, Turkish;
-```
+DefendantTable:
+NoConcatenate 
+LOAD CaseNumber,
+     SubField(Defendants, ';') as DefendantName,
+     'CNS' & PurgeChar(PurgeChar(PurgeChar(Text(now(1)),chr(32)), chr(58)), chr(47)) & Text(rowno()) as AlertUniqueID,
+     Now() as POCUploadDate,
+     Now() as SearchMatchRunDate,
+//     Field2 as ClientName,
+//     Field3 as ClientNumber,
+     'CNS' as AlertType,
+     0 as _score
+     //PurgeChar(PurgeChar(PurgeChar(PurgeChar('$(curCNSUniqueID)' & '$(curDefendant)', ' '), '/'), ':'), ',') as DefendantUniqueID 
+RESIDENT CNS_Alerts;
 
-**_The core concept is that translation can be done in the script and physically loaded into the model, or done dynamically on the front-end. You could implement section access so that a user only has access to a single language code, and then have that language code automatically fill in the “destination” argument of the function, thereby applying custom real-time translation per user without any data loaded._**
+ 
 
+FinalMatchResults:
+NoConcatenate
+LOAD //CaseNumber,
+     Field1 as DefendantName,
+     Field2 as AlertUniqueID,
+     //POCUploadDate,
+     //SearchMatchRunDate,
+     Field3 as ClientName,
+     Field4 as ClientNumber,
+     Field5 as AverageRatio
+     //AlertType,
+     //_score
+EXTENSION Python.DefendantMatch(DefendantTable{"DefendantName", "AlertUniqueID"});
 
-The two-letter codes below are what are accepted as the “source” and “destination” arguments for both Python functions"
+ 
 
-```python
-LANGUAGES = {
-'af': 'afrikaans',
-'sq': 'albanian',
-'am': 'amharic',
-'ar': 'arabic',
-'hy': 'armenian',
-'az': 'azerbaijani',
-'eu': 'basque',
-'be': 'belarusian',
-'bn': 'bengali',
-'bs': 'bosnian',
-'bg': 'bulgarian',
-'ca': 'catalan',
-'ceb': 'cebuano',
-'ny': 'chichewa',
-'zh-cn': 'chinese (simplified)',
-'zh-tw': 'chinese (traditional)',
-'co': 'corsican',
-'hr': 'croatian',
-'cs': 'czech',
-'da': 'danish',
-'nl': 'dutch',
-'en': 'english',
-'eo': 'esperanto',
-'et': 'estonian',
-'tl': 'filipino',
-'fi': 'finnish',
-'fr': 'french',
-'fy': 'frisian',
-'gl': 'galician',
-'ka': 'georgian',
-'de': 'german',
-'el': 'greek',
-'gu': 'gujarati',
-'ht': 'haitian creole',
-'ha': 'hausa',
-'haw': 'hawaiian',
-'iw': 'hebrew',
-'hi': 'hindi',
-'hmn': 'hmong',
-'hu': 'hungarian',
-'is': 'icelandic',
-'ig': 'igbo',
-'id': 'indonesian',
-'ga': 'irish',
-'it': 'italian',
-'ja': 'japanese',
-'jw': 'javanese',
-'kn': 'kannada',
-'kk': 'kazakh',
-'km': 'khmer',
-'ko': 'korean',
-'ku': 'kurdish (kurmanji)',
-'ky': 'kyrgyz',
-'lo': 'lao',
-'la': 'latin',
-'lv': 'latvian',
-'lt': 'lithuanian',
-'lb': 'luxembourgish',
-'mk': 'macedonian',
-'mg': 'malagasy',
-'ms': 'malay',
-'ml': 'malayalam',
-'mt': 'maltese',
-'mi': 'maori',
-'mr': 'marathi',
-'mn': 'mongolian',
-'my': 'myanmar (burmese)',
-'ne': 'nepali',
-'no': 'norwegian',
-'ps': 'pashto',
-'fa': 'persian',
-'pl': 'polish',
-'pt': 'portuguese',
-'pa': 'punjabi',
-'ro': 'romanian',
-'ru': 'russian',
-'sm': 'samoan',
-'gd': 'scots gaelic',
-'sr': 'serbian',
-'st': 'sesotho',
-'sn': 'shona',
-'sd': 'sindhi',
-'si': 'sinhala',
-'sk': 'slovak',
-'sl': 'slovenian',
-'so': 'somali',
-'es': 'spanish',
-'su': 'sundanese',
-'sw': 'swahili',
-'sv': 'swedish',
-'tg': 'tajik',
-'ta': 'tamil',
-'te': 'telugu',
-'th': 'thai',
-'tr': 'turkish',
-'uk': 'ukrainian',
-'ur': 'urdu',
-'uz': 'uzbek',
-'vi': 'vietnamese',
-'cy': 'welsh',
-'xh': 'xhosa',
-'yi': 'yiddish',
-'yo': 'yoruba',
-'zu': 'zulu'
-}
+Drop table DefendantTable;
+Drop table CNS_Alerts;
+drop table Client_Search_Results_Prime;
+drop table TokensToIgnore;
+
+ 
+
+exit script;
 ```
 
 ## CONFIGURE YOUR SSE AS A WINDOWS SERVICE
 
-Using NSSM is my personal favorite way to turn a Python SSE into a Windows Service. You will want to run your SSEs as services so that they startup automatically and run in the background.
-1. The **Path** needs to be the location of your desired Python executable. If you've followed my guide and are using a virtual environment, you can find that under 'C:\Users\\{USERNAME}\Envs\QlikSenseAAI\Scripts\python.exe'.
-2. the **Startup directory** needs to be the parent folder of the extension service. Depending on what guide you are following, the folder needs to contain the '_\_main\_\_.py' file or the 
-'ExtensionService_{yourservicename).py' file.
+Using NSSM we can turn a Python SSE into a Windows Service. You will want to run your SSEs as services so that they startup automatically and run in the background.
+1. The **Path** needs to be the location of your desired Python executable. You can find that under 'C:\Users\\C:\python\python.exe'.
+2. the **Startup directory** needs to be the parent folder of the extension service. The folder needs to contain the '_\_main\_\_.py' file.
 3. The **Arguments** parameter is then just the name of the file that you want Python to run. Again, depending on the guide, that will either be the '\_\_main\_\_.py' file or the 'ExtensionService_{yourservicename).py' file.
 
 **Example:**
 
-![ServiceExample](../assets/PythonAsAService.png?raw=true)
+![ServiceExample](../nssmexample/nssmexample.png?raw=true)
