@@ -237,7 +237,7 @@ exit script;
 ## CONFIGURE YOUR SSE AS A WINDOWS SERVICE
 
 Using NSSM we can turn a Python SSE into a Windows Service. You will want to run your SSEs as services so that they startup automatically and run in the background.
-1. The **Path** needs to be the location of your desired Python executable. You can find that under 'C:\Users\\C:\python\python.exe'.
+1. The **Path** needs to be the location of your desired Python executable. You can find that under 'C:\python\python.exe'.
 2. the **Startup directory** needs to be the parent folder of the extension service. The folder needs to contain the '_\_main\_\_.py' file.
 3. The **Arguments** parameter is the '\_\_main\_\_.py' file.
 
