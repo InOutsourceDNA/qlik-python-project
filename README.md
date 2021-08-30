@@ -6,7 +6,7 @@
 	- This is not mandatory and is intended for those who are not as familiar with Python to setup a virtual environment. Feel free to follow the below instructions flexibly if you have experience.
 - Qlik Sense February 2018+
     - *See how to setup Analytic Connections within QlikView [here](https://help.qlik.com/en-US/qlikview/November2017/Subsystems/Client/Content/Analytic_connections.htm)*
-- Python 3.5.3 64 bit [here](https://www.python.org/downloads/)
+- Python 3.5.3 64 bit or later. Download [here](https://www.python.org/downloads/). Suggested path to download: C:\python.
 - Python Libraries: grpcio, hyper
 
 ## LAYOUT
