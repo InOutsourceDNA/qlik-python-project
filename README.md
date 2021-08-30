@@ -21,11 +21,6 @@
 
  
 ## PREPARE YOUR PROJECT DIRECTORY
->### <span style="color:red">ALERT</span>
-><span style="color:red">
->Virtual environments are not necessary, but are frequently considered a best practice when handling multiple Python projects.
-></span>
-
 1. Open a command prompt
 2. Make a new project folder called DefendantMatch, where all of our projects will live that leverage the DefendantMatch virtual environment that we’ve created. Let’s place it under ‘C:\python’.
 3. We now want to leverage our virtual environment. If you are not already in your environment, enter it by executing:
