@@ -27,16 +27,16 @@
 ></span>
 
 1. Open a command prompt
-2. Make a new project folder called QlikSenseAAI, where all of our projects will live that leverage the QlikSenseAAI virtual environment that we’ve created. Let’s place it under ‘C:\python’.
+2. Make a new project folder called DefendantMatch, where all of our projects will live that leverage the DefendantMatch virtual environment that we’ve created. Let’s place it under ‘C:\python’.
 3. We now want to leverage our virtual environment. If you are not already in your environment, enter it by executing:
 
 ```shell
-$ workon QlikSenseAAI
+$ workon DefendantMatch
 ```
 
-4. Now, ensuring you are in the ‘QlikSenseAAI’ folder that you created. Execute the following commands to create and navigate into your project’s folder structure:
+4. Now, ensuring you are in the ‘DefendantMatch’ folder that you created. Execute the following commands to create and navigate into your project’s folder structure:
 ```
-$ cd QlikSenseAAI
+$ cd DefendantMatch
 $ mkdir DefendantMatch
 $ cd DefendantMatch
 ```
@@ -48,7 +48,7 @@ $ setprojectdir .
 ```
 6. We have now set the stage for our environment. To navigate back into this project in the future, simply execute:
 ```shell
-$ workon QlikSenseAAI
+$ workon DefendantMatch
 ```
 
 This will take you back into the environment with the default directory that we set above. To change the
@@ -58,9 +58,9 @@ the working directory with ‘setprojectdir .’
 
 ## INSTALL PYTHON LIBRARIES AND REQUIRED SOFTWARE
 
-1. Open a command prompt or continue in your current command prompt, ensuring that you are currently within the virtual environment—you will see (QlikSenseAAI) preceding the directory if so. If you are not, execute:
+1. Open a command prompt or continue in your current command prompt, ensuring that you are currently within the virtual environment—you will see (DefendantMatch) preceding the directory if so. If you are not, execute:
 ```shell
-$ workon QlikSenseAAI
+$ workon DefendantMatch
 ```
 2. Execute the following commands. 
 
