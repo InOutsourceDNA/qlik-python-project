@@ -2,8 +2,6 @@
 
 ## REQUIREMENTS
 
-- **Assuming prerequisite: [Python with Qlik Sense AAI – Environment Setup](https://docs.google.com/viewer?url=https://github.com/danielpilla/qlik-python-sse-google-translation/blob/assets/DPI%20-%20Qlik%20Sense%20AAI%20and%20Python%20Environment%20Setup.pdf?raw=true)**
-	- This is not mandatory and is intended for those who are not as familiar with Python to setup a virtual environment. Feel free to follow the below instructions flexibly if you have experience.
 - Qlik Sense February 2018+
     - *See how to setup Analytic Connections within QlikView [here](https://help.qlik.com/en-US/qlikview/November2017/Subsystems/Client/Content/Analytic_connections.htm)*
 - Python 3.5.3 64 bit or later. Download [here](https://www.python.org/downloads/). Suggested path to download: C:\python.
@@ -22,8 +20,8 @@
  
 ## PREPARE YOUR PROJECT DIRECTORY
 1. Open a command prompt
-2. Make a new project folder called DefendantMatch, where all of our projects will live that leverage the DefendantMatch virtual environment that we’ve created. Let’s place it under ‘C:\python’.
-3. We now want to leverage our virtual environment. If you are not already in your environment, enter it by executing:
+2. Make a new project folder called DefendantMatch, where all of our projects will live that leverage the DefendantMatch environment that we’ve created. Let’s place it under ‘C:\python’.
+3. We now want to leverage our environment. If you are not already in your environment, enter it by executing:
 
 ```shell
 $ workon DefendantMatch
@@ -35,13 +33,7 @@ $ cd DefendantMatch
 $ mkdir DefendantMatch
 $ cd DefendantMatch
 ```
-
-
-5. Optionally, you can bind the current working directory as the virtual environment’s default. Execute (Note the period!):
-```shell
-$ setprojectdir .
-```
-6. We have now set the stage for our environment. To navigate back into this project in the future, simply execute:
+5. We have now set the stage for our environment. To navigate back into this project in the future, simply execute:
 ```shell
 $ workon DefendantMatch
 ```
@@ -53,13 +45,11 @@ the working directory with ‘setprojectdir .’
 
 ## INSTALL PYTHON LIBRARIES AND REQUIRED SOFTWARE
 
-1. Open a command prompt or continue in your current command prompt, ensuring that you are currently within the virtual environment—you will see (DefendantMatch) preceding the directory if so. If you are not, execute:
+1. Open a command prompt or continue in your current command prompt, ensuring that you are currently within the environment—you will see (DefendantMatch) preceding the directory if so. If you are not, execute:
 ```shell
 $ workon DefendantMatch
 ```
 2. Execute the following commands. 
-
-
 
 ```shell
 $ pip install grpcio
@@ -83,7 +73,7 @@ $ pip install hyper
 
 ## PREPARE AND START SERVICES
 
-1. At this point the setup is complete, and we now need to start the python extension service. To do so, navigate back to the command prompt. Please make sure that you are inside of the virtual environment.
+1. At this point the setup is complete, and we now need to start the python extension service. To do so, navigate back to the command prompt. Please make sure that you are inside of the environment.
 2. Once at the command prompt and within your environment, execute (note two underscores on each side):
 ```shell
 $ python __main__.py
